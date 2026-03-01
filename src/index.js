@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
-const http = require('http');
-const server = http.createServer(app);
+const https = require('https');
 const { Client, Events, GatewayIntentBits } = require('discord.js');
 const config = require('../config.json');
 const fs = require('node:fs');
@@ -21,15 +20,30 @@ const port = 3000;
 const dbHost = `${config.dbhost}?password=${config.dbpassword}`;
 const lengthOfSlashCmdFilePath = config.filepathlength;
 
+const privateKey = fs.readFileSync('key.pem', 'utf8');
+const certificate = fs.readFileSync('cert.pem', 'utf8');
+const passphrase = config.httpspassphrase;
+
 /**
  * Server setup
  */
+const credentials = { key: privateKey, passphrase, cert: certificate };
+const httpsServer = https.createServer(credentials, app);
+
+const ensureSecure = (req, res, next) => {
+    if (req.secure) {
+        return next();
+    }
+    res.redirect('https://' + req.hostname + req.originalUrl);
+}
+
+app.use(ensureSecure);
 app.use(cors());
 app.use(express.json());
 
 setEndpoints(app, dbHost, config);
 
-server.listen(port, () => {
+httpsServer.listen(port, () => {
     console.log('Bot live on *:' + port);
 });
 

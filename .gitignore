@@ -7,3 +7,5 @@ game_cache.json
 greg_schema.yaml
 CorrodeDB
 tables
+cert.pem
+key.pem

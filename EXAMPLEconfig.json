@@ -8,5 +8,6 @@
     "guildid": "Id of discord server",
     "clientid": "Id of your bot",
     "defaultdb": "Name of default DB",
-    "slash_commands_file_loc": "location of slash_commands folder from disc root"
+    "slash_commands_file_loc": "location of slash_commands folder from disc root",
+    "httpspassphrase": "passphrase"
 }
